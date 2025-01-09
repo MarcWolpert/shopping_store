@@ -5,14 +5,15 @@ import Popeye from './Popeye';
 import Bougie from './Bougie';
 import Decrepit from './Decrepit';
 
-const routes = {
-	popeye: <Popeye />,
-	spinach: <Spinach />,
-	decrepit: <Decrepit />,
-	bougie: <Bougie />,
-};
+//Can be used for the product pages later
+// const routes = {
+// 	popeye: <Popeye />,
+// 	spinach: <Spinach />,
+// 	decrepit: <Decrepit />,
+// 	bougie: <Bougie />,
+// };
 
-const Profile = () => {
+const Products = () => {
 	const { name } = useParams();
 
 	return (
@@ -32,4 +33,4 @@ const Profile = () => {
 	);
 };
 
-export default Profile;
+export default Products;

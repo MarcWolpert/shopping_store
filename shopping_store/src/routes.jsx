@@ -1,6 +1,6 @@
 import App from './App';
 import ErrorPage from './components/NotFound';
-import Profile from './components/Profile';
+import Products from './components/Products';
 
 const routes = [
 	{
@@ -9,12 +9,12 @@ const routes = [
 		errorElement: <ErrorPage />,
 	},
 	{
-		path: 'profile/',
-		element: <Profile />,
+		path: 'products/',
+		element: <Products />,
 	},
 	{
-		path: 'profile/:name',
-		element: <Profile />,
+		path: 'profile/:item',
+		element: <Products />,
 	},
 ];
 
