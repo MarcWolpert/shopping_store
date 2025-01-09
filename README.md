@@ -6,5 +6,5 @@
 
 - Home Page
 - Products Page
--- Product Details Page
+- Product Details Page
 - Shopping Cart Page
