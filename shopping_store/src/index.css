@@ -7,7 +7,7 @@
 	display: none;
 }
 *:focus {
-	border: 5px solid yellow;
+	border: 5px solid red;
 }
 :root {
 	font-family:

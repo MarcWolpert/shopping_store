@@ -1,24 +1,29 @@
 // App.jsx
 import './App.css';
-import Products from './components/Products';
+import Home from './components/Home';
 import { Link } from 'react-router-dom';
+import Products from './components/Products';
 
-//Note: <a> causes page relocation
 const App = () => {
 	return (
-		<div>
-			<h1>SHOP! it</h1>
-			<nav>
-				<ul>
-					<li>
-						<Link to='/'>Home</Link>
-					</li>
-					<li>
-						<Link to='products'>Products</Link>
-					</li>
-				</ul>
-			</nav>
-		</div>
+		<>
+			<header>
+				<h1>Lagrange</h1>
+				<nav>
+					<ul>
+						<li>
+							<Link to='/'>Home</Link>
+						</li>
+						<li>
+							<Link to='products'>Products</Link>
+						</li>
+					</ul>
+				</nav>
+				<div className='headerUnderline'></div>
+			</header>
+			<main></main>
+			<footer></footer>
+		</>
 	);
 };
 
