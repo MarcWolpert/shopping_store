@@ -1,8 +1,5 @@
 import { Link } from 'react-router-dom';
 import ShoppingCartIcon from '../assets/shopping-cart.svg';
-//
-// shopping-cart.svg';
-
 const TopBanner = () => {
 	return (
 		<>
@@ -14,7 +11,7 @@ const TopBanner = () => {
 							<Link to='/'>Home&nbsp;</Link>
 						</li>
 						<li id='productLink'>
-							<Link to='products'>Products</Link>
+							<Link to='/products'>Products</Link>
 						</li>
 					</ul>
 				</nav>

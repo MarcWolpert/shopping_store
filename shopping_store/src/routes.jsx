@@ -13,7 +13,7 @@ const routes = [
 		element: <Products />,
 	},
 	{
-		path: 'profile/:item',
+		path: 'products/:item',
 		element: <Products />,
 	},
 ];
