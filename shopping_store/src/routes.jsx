@@ -1,6 +1,7 @@
 import App from './App';
 import ErrorPage from './components/NotFound';
 import Products from './components/Products';
+import ProductDetails from './components/ProductDetails';
 
 const routes = [
 	{
@@ -14,7 +15,7 @@ const routes = [
 	},
 	{
 		path: 'products/:item',
-		element: <Products />,
+		element: <ProductDetails />,
 	},
 ];
 

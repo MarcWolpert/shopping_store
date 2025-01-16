@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import addToCart from '../assets/add_to_cart.svg';
 
-function setLoadLocalStorage({
+export function setLoadLocalStorage({
 	id,
 	name,
 	addToCart,
@@ -43,38 +43,68 @@ const Card = ({ id, price, name, description, image, category }) => {
 	}, []);
 
 	return (
-		<div className='card'>
-			<img className='itemImage' src={image} alt='' />
-			{count > 0 && (
-				<p className='cartCounter' style={{}}>
-					{count}
-				</p>
-			)}
-			<div className='itemContents'>
-				<p className='itemName' id={name}>
-					{name}
-				</p>
-				<div className='bottomItemBar'>
-					<p className='price'>${price}</p>
-					<button className='addToCart'>
-						<img
-							src={addToCart}
-							alt='Add to cart button'
-							aria-describedby={name}
-							onClick={() => {
-								setLoadLocalStorage({
-									id,
-									name,
-									addToCart,
-									price,
-									description,
-									category,
-									count,
-									setCount,
-								});
-							}}
-						/>
-					</button>
+		<div className='modalCardCombo'>
+			<div className='card'>
+				<Link
+					to={`/products/${id}`}
+					state={{ id, price, name, description, image, category, count, setCount }}
+				>
+					<img
+						className='itemImage'
+						src={image}
+						onClick={() => {
+							console.log('clicked');
+						}}
+						alt=''
+					/>
+				</Link>
+				{count > 0 && (
+					<p className='cartCounter' style={{}}>
+						{count}
+					</p>
+				)}
+				<div className='itemContents'>
+					<p className='itemName' id={name}>
+						{name}
+					</p>
+					<div className='bottomItemBar'>
+						<p className='price'>${price}</p>
+						<button className='addToCart'>
+							<img
+								tabIndex={0}
+								src={addToCart}
+								alt='Add to cart button'
+								aria-describedby={`Add ${name} to cart`}
+								onClick={() => {
+									setLoadLocalStorage({
+										id,
+										name,
+										addToCart,
+										price,
+										description,
+										category,
+										count,
+										setCount,
+									});
+								}}
+								onKeyDown={(e) => {
+									e.preventDefault();
+									if (e.key === 'enter') {
+										setLoadLocalStorage(
+											id,
+											name,
+											addToCart,
+											price,
+											description,
+											category,
+											count,
+											setCount,
+										);
+									}
+								}}
+							/>
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>

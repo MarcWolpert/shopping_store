@@ -17,6 +17,31 @@ async function getJSON() {
 	}
 	return null;
 }
+function mapOverJson({ itemNumber, json }) {
+	if (json.products.length > 0) {
+		return json.products?.map((item) => {
+			itemNumber += 1;
+			return (
+				<Card
+					className='card'
+					key={itemNumber ?? -1}
+					id={itemNumber ?? -1}
+					price={json.products[itemNumber].price ?? ''}
+					name={json.products[itemNumber].title ?? ''}
+					description={json.products[itemNumber].description ?? ''}
+					image={json.products[itemNumber].image ?? ''}
+					category={json.products[itemNumber].category ?? ''}
+				></Card>
+			);
+		});
+	} else {
+		return (
+			<>
+				<p>Loading...</p>
+			</>
+		);
+	}
+}
 
 const Products = () => {
 	const [json, setJSON] = useState({ products: [] });
@@ -35,23 +60,7 @@ const Products = () => {
 				<TopBanner></TopBanner>
 			</header>
 			<main>
-				<div className='productContainer'>
-					{json.products?.map((item) => {
-						itemNumber += 1;
-						return (
-							<Card
-								className='card'
-								key={itemNumber ?? -1}
-								id={itemNumber ?? -1}
-								price={json.products[itemNumber].price ?? ''}
-								name={json.products[itemNumber].title ?? ''}
-								description={json.products[itemNumber].description ?? ''}
-								image={json.products[itemNumber].image ?? ''}
-								category={json.products[itemNumber].category ?? ''}
-							></Card>
-						);
-					})}
-				</div>
+				<div className='productContainer'>{mapOverJson({ itemNumber, json })}</div>
 			</main>
 			<footer>
 				<p>Designed and built by Marc Wolpert</p>
