@@ -4,12 +4,11 @@ import { Link } from 'react-router-dom';
 import ShoppingCartIcon from '../assets/shopping-cart.svg';
 import { useState, useEffect } from 'react';
 import Card from './Card';
+import TopBanner from './TopBanner';
 
 async function getJSON() {
 	try {
-		const response = await fetch(
-			'https://fakestoreapi.in/api/products?limit=50',
-		);
+		const response = await fetch('https://fakestoreapi.in/api/products?limit=50');
 		const json = await response.json();
 		console.log(json);
 		return json;
@@ -33,20 +32,7 @@ const Products = () => {
 	return (
 		<div>
 			<header>
-				<div className='lhsNav'>
-					<h1>Lagrange</h1>
-					<nav>
-						<ul>
-							<li>
-								<Link to='/'>Home&nbsp;</Link>
-							</li>
-							<li id='productLink'>
-								<Link to='products'>Products</Link>
-							</li>
-						</ul>
-					</nav>
-				</div>
-				<img src={ShoppingCartIcon} alt='' />
+				<TopBanner></TopBanner>
 			</header>
 			<main>
 				<div className='productContainer'>
@@ -59,14 +45,9 @@ const Products = () => {
 								id={itemNumber ?? -1}
 								price={json.products[itemNumber].price ?? ''}
 								name={json.products[itemNumber].title ?? ''}
-								description={
-									json.products[itemNumber].description ??
-									''
-								}
+								description={json.products[itemNumber].description ?? ''}
 								image={json.products[itemNumber].image ?? ''}
-								category={
-									json.products[itemNumber].category ?? ''
-								}
+								category={json.products[itemNumber].category ?? ''}
 							></Card>
 						);
 					})}

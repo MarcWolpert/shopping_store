@@ -2,8 +2,38 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import addToCart from '../assets/add_to_cart.svg';
 
+function setLoadLocalStorage({
+	id,
+	name,
+	addToCart,
+	price,
+	description,
+	category,
+	count,
+	setCount,
+}) {
+	const item = localStorage.getItem(id);
+	const parsedItem = item ? JSON.parse(item) : null;
+
+	//newcount because error handling with count
+	const newCount = parsedItem ? parsedItem.quantity + 1 : count + 1;
+	setCount(newCount);
+	localStorage.setItem(
+		id,
+		JSON.stringify({
+			name,
+			addToCart,
+			price,
+			description,
+			category,
+			quantity: newCount,
+		}),
+	);
+}
+
 const Card = ({ id, price, name, description, image, category }) => {
 	const [count, setCount] = useState(0);
+
 	useEffect(() => {
 		const item = localStorage.getItem(id);
 		if (item) {
@@ -11,15 +41,15 @@ const Card = ({ id, price, name, description, image, category }) => {
 			setCount(parsedItem.quantity || 0);
 		}
 	}, []);
+
 	return (
-		<div
-			className='card'
-			onClick={(e) => {
-				console.log(e);
-				e.stopPropagation();
-			}}
-		>
+		<div className='card'>
 			<img className='itemImage' src={image} alt='' />
+			{count > 0 && (
+				<p className='cartCounter' style={{}}>
+					{count}
+				</p>
+			)}
 			<div className='itemContents'>
 				<p className='itemName' id={name}>
 					{name}
@@ -32,30 +62,18 @@ const Card = ({ id, price, name, description, image, category }) => {
 							alt='Add to cart button'
 							aria-describedby={name}
 							onClick={() => {
-								const item = localStorage.getItem(id);
-								const parsedItem = item ? JSON.parse(item) : null;
-
-								//newcount because error handling with count
-								const newCount = parsedItem ? parsedItem.quantity + 1 : count + 1;
-								setCount(newCount);
-								localStorage.setItem(
+								setLoadLocalStorage({
 									id,
-									JSON.stringify({
-										name,
-										addToCart,
-										price,
-										description,
-										category,
-										quantity: newCount,
-									}),
-								);
+									name,
+									addToCart,
+									price,
+									description,
+									category,
+									count,
+									setCount,
+								});
 							}}
 						/>
-						{count > 0 && (
-							<p className='cartCounter' style={{}}>
-								{count}
-							</p>
-						)}
 					</button>
 				</div>
 			</div>
