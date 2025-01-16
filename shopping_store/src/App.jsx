@@ -4,12 +4,6 @@ import Home from './components/Home';
 import { Link } from 'react-router-dom';
 import Products from './components/Products';
 import ShoppingCartIcon from './assets/shopping-cart.svg';
-import f1 from './assets/f1.jpg';
-import f2 from './assets/f2.jpg';
-import f3 from './assets/f3.jpg';
-import f4 from './assets/f4.jpg';
-import f5 from './assets/f5.jpg';
-import Carousel from './components/Carousel';
 
 const App = () => {
 	return (
