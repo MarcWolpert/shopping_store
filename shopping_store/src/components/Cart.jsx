@@ -1,123 +1,86 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import TopBanner from './TopBanner';
 
-export function setLoadLocalStorage({
-	id,
-	name,
-	addToCart,
-	price,
-	description,
-	category,
-	count,
-	image,
-}) {
-	const existing = localStorage.getItem(id);
-	const parsedExisting = existing ? JSON.parse(existing) : null;
-
-	// If the item already exists, increment its quantity; otherwise, start from 1.
-	const newCount = parsedExisting ? parsedExisting.quantity + 1 : count + 1;
-
-	localStorage.setItem(
-		id,
-		JSON.stringify({
-			name,
-			addToCart,
-			price,
-			description,
-			category,
-			quantity: newCount,
-			image,
-		}),
-	);
-}
-
 const Cart = () => {
-	const [allQuantity, setAllQuantity] = useState({});
+	const [items, setItems] = useState([]);
+
+	/**
+	 * On mount, read all items from localStorage.
+	 * For each key, parse and push to `items`.
+	 */
 	useEffect(() => {
-		Object.keys(localStorage).map((id) => {
-			const json = localStorage.getItem(id);
-			if (!json) return null;
-			const parsedJson = JSON.parse(json);
-			console.log(parsedJson.image);
-			setAllQuantity({ ...allQuantity, id: parsedJson.quantity });
+		const keys = Object.keys(localStorage);
+		const loadedItems = [];
+
+		keys.forEach((key) => {
+			const stored = localStorage.getItem(key);
+			if (!stored) return;
+			try {
+				const parsed = JSON.parse(stored);
+				if (parsed.name && parsed.price && parsed.quantity) {
+					loadedItems.push({ id: key, ...parsed });
+				}
+			} catch (err) {
+				console.error('Error parsing item from localStorage:', err);
+			}
 		});
+
+		setItems(loadedItems);
 	}, []);
+
+	/**
+	 * Update item’s quantity by `delta` (e.g., +1 or -1).
+	 * If quantity goes <= 0, remove the item entirely.
+	 */
+	const updateQuantity = (id, delta) => {
+		setItems((prev) =>
+			prev
+				.map((item) => {
+					if (item.id === id) {
+						const newQty = item.quantity + delta;
+						if (newQty <= 0) {
+							localStorage.removeItem(id); // remove if no quantity
+							return null;
+						}
+						const updatedItem = { ...item, quantity: newQty };
+						localStorage.setItem(id, JSON.stringify(updatedItem));
+						return updatedItem;
+					}
+					return item;
+				})
+				// remove any items < 0
+				.filter(Boolean),
+		);
+	};
+
 	return (
 		<>
 			<header>
 				<TopBanner />
 			</header>
 			<main>
-				{Object.keys(localStorage).map((id) => {
-					const json = localStorage.getItem(id);
-					if (!json) return null; // Skip if item is null or undefined
-
-					const parsedJson = JSON.parse(json);
-					console.log(parsedJson.image);
-
-					return (
-						<div key={id} className='cartItem'>
-							{/* Only render img if we actually have an image */}
-							{parsedJson.image && (
-								<img src={parsedJson.image} alt={parsedJson.name} />
-							)}
-							<div className='details'>
-								<p>{parsedJson.name}</p>
-								<p>Price: {parsedJson.price}</p>
-
-								<p>
-									Quantity:{' '}
-									<button
-										onClick={() => {
-											const newQuantity = allQuantity.id - 1;
-											const data = localStorage;
-											setLoadLocalStorage({
-												id,
-												name,
-												addToCart,
-												price,
-												description,
-												category,
-												count,
-												image,
-											});
-											setAllQuantity({
-												...allQuantity,
-												id: newQuantity,
-											});
-											//now update the object in the background
-											// setLoadLocalStorage({ id, parsedJ });
-										}}
-									>
-										-
-									</button>
-									{' ' + String(allQuantity.id) + ' '}
-									<button
-										onClick={() => {
-											const newQuantity = allQuantity.id + 1;
-											setLoadLocalStorage({
-												id,
-												name,
-												addToCart,
-												price,
-												description,
-												category,
-												count,
-												image,
-											});
-											setAllQuantity({
-												...allQuantity,
-												id: newQuantity,
-											});
-										}}
-									>
-										+
-									</button>
-								</p>
-							</div>
+				{items.map((item) => (
+					<div key={item.id} className='cartItem'>
+						{/* Only render img if we actually have an image */}
+						{item.image && <img src={item.image} alt={item.name} />}
+						<div className='details'>
+							<p>{item.name}</p>
+							<p>Price: ${item.price}</p>
+							<p>
+								Quantity:
+								<button onClick={() => updateQuantity(item.id, -1)}>-</button>
+								{' ' + item.quantity + ' '}
+								<button onClick={() => updateQuantity(item.id, 1)}>+</button>
+							</p>
 						</div>
-					);
-				})}
+					</div>
+				))}
+				<p>
+					Total:
+					{items.reduce((accumulator, currentValue) => {
+						return accumulator + currentValue.quantity * currentValue.price;
+					}, 0)}
+				</p>
 			</main>
 			<footer></footer>
 		</>

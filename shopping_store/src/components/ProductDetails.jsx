@@ -1,12 +1,24 @@
 import React from 'react';
-import TopBanner from './TopBanner';
-import { setLoadLocalStorage } from './Card';
-import addToCart from '../assets/add_to_cart.svg';
 import { useLocation } from 'react-router-dom';
+import TopBanner from './TopBanner';
+import { addToCart } from './Card';
+import addToCartIcon from '../assets/add_to_cart.svg';
 
 const ProductDetails = () => {
 	const location = useLocation();
-	const { id, price, name, description, image, category, count } = location.state;
+	const { id, price, name, description, image, category, count } =
+		location.state || {};
+
+	const handleAddToCart = () => {
+		addToCart({ id, price, name, description, image, category });
+		alert(`${name} added to cart!`);
+	};
+
+	const handleKeyDown = (e) => {
+		if (e.key === 'Enter') {
+			handleAddToCart();
+		}
+	};
 
 	return (
 		<div className='product-details-page'>
@@ -24,39 +36,12 @@ const ProductDetails = () => {
 						<p className='product-description'>Description: {description}</p>
 						<div className='bottom-item-bar'>
 							<p className='price'>${price}</p>
-							<button
-								className='add-to-cart'
-								onClick={() => {
-									// setLoadLocalStorage({
-									//   id,
-									//   name,
-									//   addToCart,
-									//   price,
-									//   description,
-									//   category,
-									//   count,
-									//   setCount,
-									// });
-								}}
-							>
+							<button className='add-to-cart' onClick={handleAddToCart}>
 								<img
 									tabIndex={0}
-									src={addToCart}
+									src={addToCartIcon}
 									alt={`Add ${name} to cart`}
-									onKeyDown={(e) => {
-										if (e.key === 'Enter') {
-											setLoadLocalStorage(
-												id,
-												name,
-												addToCart,
-												price,
-												description,
-												category,
-												count,
-												// setCount
-											);
-										}
-									}}
+									onKeyDown={handleKeyDown}
 								/>
 							</button>
 						</div>

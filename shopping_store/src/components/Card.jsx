@@ -1,67 +1,64 @@
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import addToCart from '../assets/add_to_cart.svg';
+import addToCartIcon from '../assets/add_to_cart.svg';
 
-// This function writes all necessary data (including image) to localStorage.
-export function setLoadLocalStorage({
-	id,
-	name,
-	addToCart,
-	price,
-	description,
-	category,
-	count,
-	setCount,
-	image,
-}) {
-	const existing = localStorage.getItem(id);
-	const parsedExisting = existing ? JSON.parse(existing) : null;
+/**
+ * Helper to add or increment an item in localStorage by `id`.
+ * If item doesn’t exist, create a new one with quantity=1.
+ * If it does exist, increment quantity by 1.
+ */
+export function addToCart(itemData) {
+	const { id } = itemData;
+	const storedItem = localStorage.getItem(id);
 
-	// If the item already exists, increment its quantity; otherwise, start from 1.
-	const newCount = parsedExisting ? parsedExisting.quantity + 1 : count + 1;
-	setCount(newCount); // Update the count state in Card
-
-	localStorage.setItem(
-		id,
-		JSON.stringify({
-			name,
-			addToCart,
-			price,
-			description,
-			category,
-			quantity: newCount,
-			image,
-		}),
-	);
+	if (!storedItem) {
+		// Brand new item
+		const newItem = { ...itemData, quantity: 1 };
+		localStorage.setItem(id, JSON.stringify(newItem));
+	} else {
+		const parsedItem = JSON.parse(storedItem);
+		parsedItem.quantity = (parsedItem.quantity || 0) + 1;
+		localStorage.setItem(id, JSON.stringify(parsedItem));
+	}
 }
 
 const Card = ({ id, price, name, description, image, category }) => {
+	// For the little "count bubble" displayed on the product card
 	const [count, setCount] = useState(0);
-	const data = { id, price, name, description, image, category, count };
 
+	// Sync with localStorage on mount
 	useEffect(() => {
-		const item = localStorage.getItem(id);
-		if (item) {
-			const parsedItem = JSON.parse(item);
-			// If the item is already in storage, sync state with its quantity
-			setCount(parsedItem.quantity || 0);
+		const storedItem = localStorage.getItem(id);
+		if (storedItem) {
+			const parsed = JSON.parse(storedItem);
+			setCount(parsed.quantity || 0);
 		}
 	}, [id]);
 
+	const handleAddToCart = () => {
+		addToCart({ id, price, name, description, image, category });
+		const updated = localStorage.getItem(id);
+		if (updated) {
+			const parsed = JSON.parse(updated);
+			setCount(parsed.quantity || 0);
+		}
+	};
+
 	return (
 		<div className='card'>
-			<Link to={`/products/${id}`} state={data}>
+			<Link
+				to={`/products/${id}`}
+				state={{ id, price, name, description, image, category, count }}
+			>
 				<img
 					className='itemImage'
 					src={image}
 					alt={name}
-					onClick={() => {
-						console.log('clicked');
-					}}
+					onClick={() => console.log('clicked')}
 				/>
 			</Link>
 
-			{/* If the count is above 0, display it in the corner */}
+			{/* Display quantity bubble if > 0 */}
 			{count > 0 && <p className='cartCounter'>{count}</p>}
 
 			<div className='itemContents'>
@@ -70,40 +67,15 @@ const Card = ({ id, price, name, description, image, category }) => {
 				</p>
 				<div className='bottomItemBar'>
 					<p className='price'>${price}</p>
-					<button className='addToCart'>
+					<button tabIndex={-1} className='addToCart'>
 						<img
 							tabIndex={0}
-							src={addToCart}
+							src={addToCartIcon}
 							alt={`Add ${name} to cart`}
-							aria-describedby={`Add ${name} to cart`}
-							onClick={() => {
-								setLoadLocalStorage({
-									id,
-									name,
-									addToCart,
-									price,
-									description,
-									category,
-									count,
-									setCount,
-									image,
-								});
-							}}
+							onClick={handleAddToCart}
 							onKeyDown={(e) => {
-								e.preventDefault();
-								// Typically "Enter" is capitalized, but this may vary by environment
-								if (e.key === 'enter' || e.key === 'Enter') {
-									setLoadLocalStorage({
-										id,
-										name,
-										addToCart,
-										price,
-										description,
-										category,
-										count,
-										setCount,
-										image,
-									});
+								if (e.key === 'Enter' || e.key === 'enter') {
+									handleAddToCart();
 								}
 							}}
 						/>
