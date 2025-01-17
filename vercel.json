@@ -1,0 +1,8 @@
+{
+	"rewrites": [
+		{
+			"source": "/(.*)",
+			"destination": "/shopping_store/index.html"
+		}
+	]
+}
