@@ -10,7 +10,6 @@ async function getJSON() {
 	try {
 		const response = await fetch('https://fakestoreapi.in/api/products?limit=50');
 		const json = await response.json();
-		console.log(json);
 		return json;
 	} catch (error) {
 		console.log(`Fetch Error: ${error}`);
@@ -49,7 +48,6 @@ const Products = () => {
 		const fetchData = async () => {
 			const items = await getJSON();
 			setJSON(items);
-			console.log(`Type is: ${typeof json.products}`);
 		};
 		fetchData();
 	}, []);

@@ -4,7 +4,9 @@ const TopBanner = () => {
 	return (
 		<>
 			<div className='lhsNav'>
-				<h1 aria-label='Store Name: Lagrange'>Lagrange</h1>
+				<Link to='/'>
+					<h1 aria-label='Store Name: Lagrange'>Lagrange</h1>
+				</Link>
 				<nav>
 					<ul>
 						<li>

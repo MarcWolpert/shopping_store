@@ -50,12 +50,7 @@ const Card = ({ id, price, name, description, image, category }) => {
 				to={`/products/${id}`}
 				state={{ id, price, name, description, image, category, count }}
 			>
-				<img
-					className='itemImage'
-					src={image}
-					alt={name}
-					onClick={() => console.log('clicked')}
-				/>
+				<img className='itemImage' src={image} alt={name} />
 			</Link>
 
 			{/* Display quantity bubble if > 0 */}
