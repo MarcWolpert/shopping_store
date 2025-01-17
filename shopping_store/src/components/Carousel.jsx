@@ -25,6 +25,9 @@ const Carousel = () => {
 		setTimeout(() => {
 			loopArray(currentPic, pictureLength, 1, setCurrentPic);
 		}, 15000);
+		return () => {
+			clearTimeout(timer);
+		};
 	}, [currentPic]);
 
 	return (
