@@ -248,6 +248,17 @@ footer {
 	font-size: 1.5rem;
 	text-align: center;
 }
+.cartLink {
+	margin-left: auto;
+	margin-right: 1rem;
+	border: none;
+	background-color: #cccccc00;
+	color: #cccccc00;
+	img {
+		width: 2rem;
+		padding-top: 1.5rem;
+	}
+}
 
 body {
 	margin: 0;
@@ -266,19 +277,6 @@ body {
 			display: flex;
 			flex-direction: row;
 			min-width: 360px;
-			counter-reset: item-counter;
-
-			img {
-				width: 2rem;
-				padding-top: 1.5rem;
-			}
-			button {
-				margin-left: auto;
-				margin-right: 1rem;
-				border: none;
-				background-color: #cccccc00;
-				color: #cccccc00;
-			}
 
 			.lhsNav {
 				transform: translateX(2rem);

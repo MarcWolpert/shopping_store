@@ -16,9 +16,9 @@ const TopBanner = () => {
 					</ul>
 				</nav>
 			</div>
-			<button>
-				<img src={ShoppingCartIcon} alt='Shopping Cart' onClick={() => {}} />)
-			</button>
+			<Link className='cartLink' to='/cart'>
+				<img src={ShoppingCartIcon} alt='Shopping Cart' />)
+			</Link>
 		</>
 	);
 };

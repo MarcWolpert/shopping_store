@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import addToCart from '../assets/add_to_cart.svg';
 
+// This function writes all necessary data (including image) to localStorage.
 export function setLoadLocalStorage({
 	id,
 	name,
@@ -11,13 +12,15 @@ export function setLoadLocalStorage({
 	category,
 	count,
 	setCount,
+	image,
 }) {
-	const item = localStorage.getItem(id);
-	const parsedItem = item ? JSON.parse(item) : null;
+	const existing = localStorage.getItem(id);
+	const parsedExisting = existing ? JSON.parse(existing) : null;
 
-	//newcount because error handling with count
-	const newCount = parsedItem ? parsedItem.quantity + 1 : count + 1;
-	setCount(newCount);
+	// If the item already exists, increment its quantity; otherwise, start from 1.
+	const newCount = parsedExisting ? parsedExisting.quantity + 1 : count + 1;
+	setCount(newCount); // Update the count state in Card
+
 	localStorage.setItem(
 		id,
 		JSON.stringify({
@@ -27,6 +30,7 @@ export function setLoadLocalStorage({
 			description,
 			category,
 			quantity: newCount,
+			image,
 		}),
 	);
 }
@@ -39,9 +43,10 @@ const Card = ({ id, price, name, description, image, category }) => {
 		const item = localStorage.getItem(id);
 		if (item) {
 			const parsedItem = JSON.parse(item);
+			// If the item is already in storage, sync state with its quantity
 			setCount(parsedItem.quantity || 0);
 		}
-	}, []);
+	}, [id]);
 
 	return (
 		<div className='card'>
@@ -49,17 +54,16 @@ const Card = ({ id, price, name, description, image, category }) => {
 				<img
 					className='itemImage'
 					src={image}
+					alt={name}
 					onClick={() => {
 						console.log('clicked');
 					}}
-					alt=''
 				/>
 			</Link>
-			{count > 0 && (
-				<p className='cartCounter' style={{}}>
-					{count}
-				</p>
-			)}
+
+			{/* If the count is above 0, display it in the corner */}
+			{count > 0 && <p className='cartCounter'>{count}</p>}
+
 			<div className='itemContents'>
 				<p className='itemName' id={name}>
 					{name}
@@ -70,7 +74,7 @@ const Card = ({ id, price, name, description, image, category }) => {
 						<img
 							tabIndex={0}
 							src={addToCart}
-							alt='Add to cart button'
+							alt={`Add ${name} to cart`}
 							aria-describedby={`Add ${name} to cart`}
 							onClick={() => {
 								setLoadLocalStorage({
@@ -82,12 +86,14 @@ const Card = ({ id, price, name, description, image, category }) => {
 									category,
 									count,
 									setCount,
+									image,
 								});
 							}}
 							onKeyDown={(e) => {
 								e.preventDefault();
-								if (e.key === 'enter') {
-									setLoadLocalStorage(
+								// Typically "Enter" is capitalized, but this may vary by environment
+								if (e.key === 'enter' || e.key === 'Enter') {
+									setLoadLocalStorage({
 										id,
 										name,
 										addToCart,
@@ -96,7 +102,8 @@ const Card = ({ id, price, name, description, image, category }) => {
 										category,
 										count,
 										setCount,
-									);
+										image,
+									});
 								}
 							}}
 						/>

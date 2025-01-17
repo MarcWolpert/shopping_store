@@ -2,7 +2,7 @@ import App from './App';
 import ErrorPage from './components/NotFound';
 import Products from './components/Products';
 import ProductDetails from './components/ProductDetails';
-
+import Cart from './components/Cart';
 const routes = [
 	{
 		path: '/',
@@ -16,6 +16,10 @@ const routes = [
 	{
 		path: 'products/:item',
 		element: <ProductDetails />,
+	},
+	{
+		path: 'cart',
+		element: <Cart />,
 	},
 ];
 
