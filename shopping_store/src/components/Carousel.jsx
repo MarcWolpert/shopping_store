@@ -23,19 +23,21 @@ const Carousel = () => {
 	const [currentPic, setCurrentPic] = useState(0);
 	return (
 		<>
-			<button
-				id='lhsButton'
-				onClick={() => loopArray(currentPic, pictureLength, -1, setCurrentPic)}
-			>
-				&lt;
-			</button>
-			<img src={pictures[currentPic]} alt='' />
-			<button
-				id='rhsButton'
-				onClick={() => loopArray(currentPic, pictureLength, 1, setCurrentPic)}
-			>
-				&gt;
-			</button>
+			<div className='carouselContainer'>
+				<button
+					id='lhsButton'
+					onClick={() => loopArray(currentPic, pictureLength, -1, setCurrentPic)}
+				>
+					&lt;
+				</button>
+				<img src={pictures[currentPic]} alt='' />
+				<button
+					id='rhsButton'
+					onClick={() => loopArray(currentPic, pictureLength, 1, setCurrentPic)}
+				>
+					&gt;
+				</button>
+			</div>
 		</>
 	);
 };

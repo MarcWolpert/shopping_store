@@ -6,7 +6,6 @@ const Home = () => {
 	return (
 		<>
 			<Carousel></Carousel>
-			<button onClick={() => localStorage.clear()}>Clear Local Storage</button>
 		</>
 	);
 };

@@ -141,7 +141,7 @@ main {
 		z-index: 1;
 		height: var(--main-height);
 		width: 15vw;
-		background-color: rgba(0, 0, 0, 0.014);
+		background-color: rgba(0, 0, 0, 0);
 		top: 0;
 		border: none;
 	}
@@ -154,7 +154,10 @@ main {
 	#lhsButton:hover,
 	#rhsButton:hover {
 		color: rgba(0, 0, 0, 0.35);
-		background-color: rgba(0, 0, 0, 0.054);
+		background-color: rgba(0, 0, 0, 0);
+	}
+	.carouselContainer {
+		position: relative;
 	}
 }
 
@@ -414,6 +417,33 @@ body {
 			background-color: white;
 			font-family: 'Allura';
 			font-size: 1.5rem;
+		}
+	}
+}
+
+.cartMain {
+	gap: 1rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-top: 3rem;
+	.cartItem {
+		border: 1px solid black;
+		display: flex;
+		width: 70vw;
+
+		.cartItemPicture {
+			margin-top: 1rem;
+			margin-bottom: 1rem;
+			width: 15vw;
+			height: 15vw;
+			object-fit: cover;
+		}
+		.details {
+			button {
+				cursor: pointer;
+			}
 		}
 	}
 }

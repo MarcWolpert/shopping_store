@@ -58,11 +58,13 @@ const Cart = () => {
 			<header>
 				<TopBanner />
 			</header>
-			<main>
+			<main className='cartMain'>
 				{items.map((item) => (
 					<div key={item.id} className='cartItem'>
 						{/* Only render img if we actually have an image */}
-						{item.image && <img src={item.image} alt={item.name} />}
+						{item.image && (
+							<img src={item.image} className='cartItemPicture' alt={item.name} />
+						)}
 						<div className='details'>
 							<p>{item.name}</p>
 							<p>Price: ${item.price}</p>
@@ -75,12 +77,22 @@ const Cart = () => {
 						</div>
 					</div>
 				))}
-				<p>
-					Total:
-					{items.reduce((accumulator, currentValue) => {
-						return accumulator + currentValue.quantity * currentValue.price;
-					}, 0)}
-				</p>
+				{(() => {
+					if (items.length < 1) {
+						return (
+							<p style={{ transform: 'translateY(30vh)' }}>Nothing in your cart.</p>
+						);
+					} else {
+						return (
+							<p>
+								Total:
+								{items.reduce((accumulator, currentValue) => {
+									return accumulator + currentValue.quantity * currentValue.price;
+								}, 0)}
+							</p>
+						);
+					}
+				})()}
 			</main>
 			<footer></footer>
 		</>
