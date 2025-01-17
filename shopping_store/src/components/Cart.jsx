@@ -85,7 +85,7 @@ const Cart = () => {
 					} else {
 						return (
 							<p>
-								Total:
+								Total:$
 								{items.reduce((accumulator, currentValue) => {
 									return accumulator + currentValue.quantity * currentValue.price;
 								}, 0)}
