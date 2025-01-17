@@ -74,9 +74,7 @@ header {
 		background-color: #cccccc00;
 		color: #cccccc00;
 	}
-	img:hover {
-		background-color: blue;
-	}
+
 	.lhsNav {
 		transform: translateX(2rem);
 		display: flex;
@@ -109,11 +107,6 @@ header {
 						text-decoration: none;
 						color: black;
 						font-size: max(1rem, 2.5vmin);
-					}
-				}
-				li:hover {
-					a {
-						background-color: red;
 					}
 				}
 			}
@@ -254,4 +247,175 @@ footer {
 	font-family: 'Allura';
 	font-size: 1.5rem;
 	text-align: center;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+
+	.product-details-page {
+		display: flex;
+		flex-direction: column;
+		min-height: 100vh; /* So footer pushes to bottom of page */
+
+		header {
+			position: sticky;
+			top: 0;
+			z-index: 1;
+			background-color: white;
+			display: flex;
+			flex-direction: row;
+			min-width: 360px;
+			counter-reset: item-counter;
+
+			img {
+				width: 2rem;
+				padding-top: 1.5rem;
+			}
+			button {
+				margin-left: auto;
+				margin-right: 1rem;
+				border: none;
+				background-color: #cccccc00;
+				color: #cccccc00;
+			}
+
+			.lhsNav {
+				transform: translateX(2rem);
+				display: flex;
+				flex-direction: row;
+
+				h1 {
+					margin-left: 0rem;
+					padding-left: 1vmin;
+					padding-bottom: 0rem;
+					margin-bottom: 0rem;
+					transform: translateY(-10px);
+					font-family: 'Allura';
+					font-size: calc(2rem + 1vh);
+					position: relative;
+				}
+
+				nav {
+					height: 5vh;
+
+					ul {
+						transform: translateX(-1rem);
+						position: relative;
+						display: inline-block;
+
+						li {
+							padding-top: 1rem;
+							padding-bottom: 0.73rem;
+							display: inline-block;
+							font-weight: 500;
+							list-style-type: none;
+							padding-left: 1vmin;
+
+							a {
+								text-decoration: none;
+								color: black;
+								font-size: max(1rem, 2.5vmin);
+							}
+						}
+					}
+				}
+			}
+
+			.headerUnderline {
+				width: 100vw;
+				position: absolute;
+				transform: translateY(7.5vh);
+				border-bottom: 1px solid #ccc;
+			}
+		}
+
+		.product-details-content {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding: 1rem;
+
+			.product-card {
+				display: flex;
+				flex-direction: column;
+				border: 1.5px solid black;
+				max-width: 600px;
+				width: 100%;
+				margin: 1rem auto;
+				padding: 1rem;
+				border-radius: 0.25rem;
+
+				.product-image {
+					display: block;
+					margin: 0 auto;
+					max-width: 100%;
+					height: auto;
+					object-fit: contain;
+				}
+
+				.product-info {
+					display: flex;
+					flex-direction: column;
+					margin-top: 1rem;
+
+					.product-name {
+						text-align: center;
+						font-size: clamp(1rem, 2vw, 1.5rem);
+						margin-bottom: 0.5rem;
+						font-weight: bold;
+					}
+
+					.product-description {
+						text-align: center;
+						margin-bottom: 1rem;
+						max-width: 70ch;
+						margin: 0 auto;
+						white-space: normal;
+						word-wrap: break-word;
+					}
+
+					.bottom-item-bar {
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						flex-wrap: wrap;
+						gap: 1rem;
+
+						.price {
+							font-weight: 500;
+							font-size: 1.1rem;
+						}
+
+						.add-to-cart {
+							background-color: transparent;
+							border: none;
+							padding: 0;
+							cursor: pointer;
+							float: right;
+
+							img {
+								height: 2rem;
+								width: 2rem;
+							}
+
+							&:hover {
+								animation: shake 0.5s;
+								animation-iteration-count: 1;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		footer {
+			text-align: center;
+			padding: 1rem;
+			background-color: white;
+			font-family: 'Allura';
+			font-size: 1.5rem;
+		}
+	}
 }

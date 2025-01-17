@@ -33,6 +33,7 @@ export function setLoadLocalStorage({
 
 const Card = ({ id, price, name, description, image, category }) => {
 	const [count, setCount] = useState(0);
+	const data = { id, price, name, description, image, category, count };
 
 	useEffect(() => {
 		const item = localStorage.getItem(id);
@@ -43,40 +44,50 @@ const Card = ({ id, price, name, description, image, category }) => {
 	}, []);
 
 	return (
-		<div className='modalCardCombo'>
-			<div className='card'>
-				<Link
-					to={`/products/${id}`}
-					state={{ id, price, name, description, image, category, count, setCount }}
-				>
-					<img
-						className='itemImage'
-						src={image}
-						onClick={() => {
-							console.log('clicked');
-						}}
-						alt=''
-					/>
-				</Link>
-				{count > 0 && (
-					<p className='cartCounter' style={{}}>
-						{count}
-					</p>
-				)}
-				<div className='itemContents'>
-					<p className='itemName' id={name}>
-						{name}
-					</p>
-					<div className='bottomItemBar'>
-						<p className='price'>${price}</p>
-						<button className='addToCart'>
-							<img
-								tabIndex={0}
-								src={addToCart}
-								alt='Add to cart button'
-								aria-describedby={`Add ${name} to cart`}
-								onClick={() => {
-									setLoadLocalStorage({
+		<div className='card'>
+			<Link to={`/products/${id}`} state={data}>
+				<img
+					className='itemImage'
+					src={image}
+					onClick={() => {
+						console.log('clicked');
+					}}
+					alt=''
+				/>
+			</Link>
+			{count > 0 && (
+				<p className='cartCounter' style={{}}>
+					{count}
+				</p>
+			)}
+			<div className='itemContents'>
+				<p className='itemName' id={name}>
+					{name}
+				</p>
+				<div className='bottomItemBar'>
+					<p className='price'>${price}</p>
+					<button className='addToCart'>
+						<img
+							tabIndex={0}
+							src={addToCart}
+							alt='Add to cart button'
+							aria-describedby={`Add ${name} to cart`}
+							onClick={() => {
+								setLoadLocalStorage({
+									id,
+									name,
+									addToCart,
+									price,
+									description,
+									category,
+									count,
+									setCount,
+								});
+							}}
+							onKeyDown={(e) => {
+								e.preventDefault();
+								if (e.key === 'enter') {
+									setLoadLocalStorage(
 										id,
 										name,
 										addToCart,
@@ -85,26 +96,11 @@ const Card = ({ id, price, name, description, image, category }) => {
 										category,
 										count,
 										setCount,
-									});
-								}}
-								onKeyDown={(e) => {
-									e.preventDefault();
-									if (e.key === 'enter') {
-										setLoadLocalStorage(
-											id,
-											name,
-											addToCart,
-											price,
-											description,
-											category,
-											count,
-											setCount,
-										);
-									}
-								}}
-							/>
-						</button>
-					</div>
+									);
+								}
+							}}
+						/>
+					</button>
 				</div>
 			</div>
 		</div>
