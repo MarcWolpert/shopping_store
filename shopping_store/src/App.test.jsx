@@ -2,44 +2,64 @@ import { render, screen } from '@testing-library/react';
 import App from './App';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect } from 'vitest';
+import { MemoryRouter } from 'react-router-dom';
 
-//1-- describe('App', () => {
-// 	it('renders headline', () => {
-// 		render(<App title='React' />);
-// 		screen.debug();
-// 		//check if App component renders headline
-// 	});
-// });
+//Test: Home page in <App> has a Link with a heading in it with Lagrange as the text content
+describe('Home component', () => {
+	it('Home page has Lagrange heading', () => {
+		render(
+			<MemoryRouter>
+				<App />
+			</MemoryRouter>,
+		);
 
-// describe('App component', () => {
-//     it('renders correct heading', () => {
-//         render(<App />);
-//         expect(screen.getByRole("heading").textContent).toMatch(/our first test/i);
-//     })
-// })
+		const heading = screen.getByRole('heading');
+		expect(heading).toHaveTextContent('Lagrange');
+	});
+	it('Home page when clicked on the Home text leads you to the Home page', () => {
+		render(
+			<MemoryRouter>
+				<App />
+			</MemoryRouter>,
+		);
 
-//2
-
-describe('App component', () => {
-	it('renders magnificent monkeys', () => {
-		// since screen does not have the container property,
-		// we'll destructure render to obtain a container for this test
-		const { container } = render(<App />);
-		expect(container).toMatchSnapshot();
+		const link = screen.getByRole('link', { name: 'Home' });
+		userEvent.click(link);
+		//check for img tag to have alt text with 'fashionable' in it
+		const images = screen.getAllByRole('img');
+		//search for img tag with alt text containing 'fashionable'
+		const img = images.find((img) => img.alt.match('Fashionable clothing'));
+		expect(img).toHaveAttribute('alt', 'Fashionable clothing');
+	});
+	//Test: Products link goes to a page with more than one product
+	//product has an image, which is a link to product details page,
+	//a price, an add to cart button
+	it('Products page has more than one product', () => {
+		render(
+			<MemoryRouter>
+				<App />
+			</MemoryRouter>,
+		);
+		const link = screen.getByRole('link', { name: 'Products' });
+		console.log('This is the link: ', link);
+		userEvent.click(link);
+		//wait for the products to load
+		setTimeout(() => {
+			const images = screen.getAllByRole('img');
+			expect(images.length).toBeGreaterThan(12);
+		}, 5000);
 	});
 
-	it('renders radical rhinos after button click', async () => {
-		const user = userEvent.setup();
+	//Test: Clicking on the product cart button should display a red bubble that is incremented by 1
 
-		render(<App />);
-		const button = screen.getByRole('button', { name: 'Click Me' });
+	//Test: Clicking on the product cart button should add to cart
+	//Steps: Click on button,
+	//click on the cart link,
+	// check if the product is in the cart and right amount matching that
+	//of the red dot in the upper right hand corner
 
-		await user.click(button);
+	//Test: Decrementing the counter on the cart page for a specific item
+	//should decrement the red bubble on the product on the products page
 
-		expect(screen.getByRole('heading').textContent).toMatch(/radical rhinos/i);
-	});
+	//Test: Home Page picture should change once every 7 seconds
 });
-
-
-
-export default RenderName;

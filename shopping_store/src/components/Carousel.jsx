@@ -22,9 +22,9 @@ const Carousel = () => {
 	const pictureLength = pictures.length;
 	const [currentPic, setCurrentPic] = useState(0);
 	useEffect(() => {
-		setTimeout(() => {
+		const timer = setTimeout(() => {
 			loopArray(currentPic, pictureLength, 1, setCurrentPic);
-		}, 15000);
+		}, 5000);
 		return () => {
 			clearTimeout(timer);
 		};
@@ -39,7 +39,7 @@ const Carousel = () => {
 				>
 					&lt;
 				</button>
-				<img src={pictures[currentPic]} alt='' />
+				<img src={pictures[currentPic]} alt='Fashionable clothing' />
 				<button
 					id='rhsButton'
 					onClick={() => loopArray(currentPic, pictureLength, 1, setCurrentPic)}
