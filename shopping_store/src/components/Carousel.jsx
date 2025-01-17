@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import f1 from '../assets/f1.jpg';
 import f2 from '../assets/f2.jpg';
 import f3 from '../assets/f3.jpg';
@@ -21,6 +21,12 @@ const Carousel = () => {
 	const pictures = [f1, f2, f3, f4, f5];
 	const pictureLength = pictures.length;
 	const [currentPic, setCurrentPic] = useState(0);
+	useEffect(() => {
+		setTimeout(() => {
+			loopArray(currentPic, pictureLength, 1, setCurrentPic);
+		}, 7000);
+	}, [currentPic]);
+
 	return (
 		<>
 			<div className='carouselContainer'>

@@ -69,7 +69,7 @@ header {
 	}
 	button {
 		margin-left: auto;
-		margin-right: 1rem;
+		margin-right: auto;
 		border: none;
 		background-color: #cccccc00;
 		color: #cccccc00;
@@ -131,7 +131,8 @@ main {
 	position: relative;
 	img {
 		height: var(--main-height);
-		/* width: 100vw; */
+		width: 100vw;
+		object-fit: cover;
 	}
 	#lhsButton,
 	#rhsButton {
@@ -140,7 +141,7 @@ main {
 		color: rgba(0, 0, 0, 0.226);
 		z-index: 1;
 		height: var(--main-height);
-		width: 15vw;
+		width: 5vw;
 		background-color: rgba(0, 0, 0, 0);
 		top: 0;
 		border: none;
