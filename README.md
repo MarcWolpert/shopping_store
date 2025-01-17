@@ -1,6 +1,6 @@
 # Store Application
 
-- Basic online store application built with React, FakeStore API, HTML, CSS, Javascript, React Router, and React testing.
+- Basic online store application built with React, Fake Store API, HTML, CSS, Javascript, and React Router.
 
 ## Features
 
