@@ -41,9 +41,7 @@ describe('Home component', () => {
 			</MemoryRouter>,
 		);
 		const link = screen.getByRole('link', { name: 'Products' });
-		console.log('This is the link: ', link);
 		userEvent.click(link);
-		//wait for the products to load
 		setTimeout(() => {
 			const images = screen.getAllByRole('img');
 			expect(images.length).toBeGreaterThan(12);
@@ -51,6 +49,38 @@ describe('Home component', () => {
 	});
 
 	//Test: Clicking on the product cart button should display a red bubble that is incremented by 1
+	it('Clicking on the product cart button should display a red bubble that is incremented by 1', () => {
+		render(
+			<MemoryRouter>
+				<App />
+			</MemoryRouter>,
+		);
+		const link = screen.getByRole('link', { name: 'Products' });
+		userEvent.click(link);
+
+		//wait 5 seconds for the images to load
+		setTimeout(() => {
+			const images = screen.getAllByRole('img');
+			expect(images.length).toBeGreaterThan(12);
+			//it isn't a button it's an img tag
+			const regex = /alt={`Add [\s\S]* to cart/;
+			const addToCartButtonImg = screen.getAllByRole('img', { name: regex })[0];
+			userEvent.click(addToCartButtonImg);
+			console.log('This is the button: ', addToCartButtonImg);
+
+			//wait for the red bubble to appear
+			setTimeout(() => {
+				const redBubble = screen.getAllByRole('p', { name: '1' })[0];
+				expect(redBubble).toHaveTextContent('1');
+				//do it again to check if it increments
+				userEvent.click(addToCartButtonImg);
+				setTimeout(() => {
+					const redBubble = screen.getAllByRole('p', { name: '2' })[0];
+					expect(redBubble).toHaveTextContent('2');
+				}, 2000);
+			}, 2000);
+		}, 5000);
+	});
 
 	//Test: Clicking on the product cart button should add to cart
 	//Steps: Click on button,
