@@ -10,7 +10,7 @@
 		"prettify": "prettier --write .",
 		"organize": "npm run lint && npm run prettify",
 		"preview": "vite preview",
-		"test": "vitest"
+		"test": "vitest --coverage"
 	},
 	"dependencies": {
 		"prop-types": "^15.8.1",
