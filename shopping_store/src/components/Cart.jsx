@@ -60,12 +60,12 @@ const Cart = () => {
 			</header>
 			<main className='cartMain'>
 				{items.map((item) => (
-					<div key={item.id} className='cartItem'>
+					<div key={item.id} className='cartItem' alt={item.name}>
 						{/* Only render img if we actually have an image */}
 						{item.image && (
 							<img src={item.image} className='cartItemPicture' alt={item.name} />
 						)}
-						<div className='details'>
+						<div className='details' alt={item.name + ' details'}>
 							<p>{item.name}</p>
 							<p>Price: ${item.price}</p>
 							<p>

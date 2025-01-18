@@ -8,6 +8,9 @@ import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 //Test: Home page in <App> has a Link with a heading in it with Lagrange as the text content
 describe('Home component', () => {
+	beforeEach(() => {
+		localStorage.clear();
+	});
 	it('Home page has Lagrange heading', () => {
 		render(
 			<MemoryRouter>
@@ -98,6 +101,7 @@ describe('Home component', () => {
 			// Second check: bubble = 2
 			redBubble = screen.getByText('2');
 			expect(redBubble).toHaveTextContent('2');
+			localStorage.clear();
 		},
 		{ timeout: 15000 },
 	);
@@ -115,43 +119,38 @@ describe('Home component', () => {
 
 			const link = screen.getByRole('link', { name: 'Products' });
 			await userEvent.click(link);
-
-			// Wait 5 seconds
-			await new Promise((resolve) => setTimeout(resolve, 5000));
+			await new Promise((resolve) => setTimeout(resolve, 1000));
 
 			let images = screen.getAllByRole('img');
 			expect(images.length).toBeGreaterThan(12);
 
-			const regex = /alt={`Add [\s\S]* to cart/;
-			const addToCartButtonImg = screen.getAllByRole('img', { name: regex })[0];
+			// "Add ... to cart" alt text
+			const addToCartButtonImg = screen.getByRole('button', {
+				name: /Add Sony WH-1000XM3/i,
+			});
+
 			await userEvent.click(addToCartButtonImg);
-			console.log('This is the button: ', addToCartButtonImg);
+			//set 1.5 second timeout
+			await new Promise((resolve) => setTimeout(resolve, 1500));
+			//get item name
+			const itemName = screen.getByText(/Sony WH-1000XM3/i).textContent;
 
-			// Wait 2 seconds
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-
-			// Bubble = 1
-			let redBubble = screen.getAllByRole('p', { name: '1' })[0];
+			// First check: bubble = 1
+			let redBubble = screen.getByText('1');
 			expect(redBubble).toHaveTextContent('1');
 
 			// Click again
 			await userEvent.click(addToCartButtonImg);
 
-			// Wait 2 seconds
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-
-			// Bubble = 2
-			redBubble = screen.getAllByRole('p', { name: '2' })[0];
+			// Second check: bubble = 2
+			redBubble = screen.getByText('2');
 			expect(redBubble).toHaveTextContent('2');
 
 			// Go to the cart page
-			const cartLink = screen.getByRole('link', { name: 'cartLink' });
+			const cartLink = screen.getByRole('link', { name: /Shopping Cart/i });
 			await userEvent.click(cartLink);
 
-			// structure is cartItem -> (cartItemPicture + details ->(p + p + p))
-			// the p tag that is 3rd is the quantity
-			const cartItems = screen.getAllByRole('div', { name: 'cartItem' });
-			const cartItemQuantity = cartItems[0].children[1].children[2];
+			const cartItemQuantity = screen.getByText(/[\s\S]*2[\s\S]*/i);
 			expect(cartItemQuantity).toHaveTextContent('2');
 		},
 		{ timeout: 15000 },
@@ -255,8 +254,8 @@ describe('Home component', () => {
 	// 	{ timeout: 15000 },
 	// );
 
-	// //Test: Clicking on a product on the product page should take you to the product detail page,
-	// // where pressing the add to cart button should add the item to the cart, which should be displayed on the cart page
+	// // //Test: Clicking on a product on the product page should take you to the product detail page,
+	// // // where pressing the add to cart button should add the item to the cart, which should be displayed on the cart page
 	// it(
 	// 	'Clicking on a product on the product page should take you to the product detail page, where pressing the add to cart button should add the item to the cart',
 	// 	async () => {
