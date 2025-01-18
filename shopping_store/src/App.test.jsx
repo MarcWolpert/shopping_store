@@ -179,4 +179,22 @@ describe('Home component', () => {
 	});
 
 	//Test: Home Page picture should change once every 7 seconds
+	it('Home Page picture should change once every 7 seconds', () => {
+		render(
+			<MemoryRouter>
+				<App />
+			</MemoryRouter>,
+		);
+		const images = screen.getAllByRole('img');
+		const homeImage = images.find((img) => img.alt.match('Fashionable clothing'));
+		const homeImageSrc = homeImage.src;
+		setTimeout(() => {
+			const newImages = screen.getAllByRole('img');
+			const newHomeImage = newImages.find((img) =>
+				img.alt.match('Fashionable clothing'),
+			);
+			const newHomeImageSrc = newHomeImage.src;
+			expect(homeImageSrc).not.toBe(newHomeImageSrc);
+		}, 7000);
+	});
 });
