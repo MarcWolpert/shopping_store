@@ -158,101 +158,100 @@ describe('Home component', () => {
 
 	// //Test: Decrementing the counter on the cart page for a specific item
 	// //should decrement the red bubble on the product on the products page
-	// it(
-	// 	'Decrementing the counter on the cart page for a specific item should decrement the red bubble on the product on the products page',
-	// 	async () => {
-	// 		// Use a MemoryRouter for testing:
-	// 		const testRouter = createMemoryRouter(routes, {
-	// 			initialEntries: ['/'], // start on the home page
-	// 		});
+	it(
+		'Decrementing the counter on the cart page for a specific item should decrement the red bubble on the product on the products page',
+		async () => {
+			// Use a MemoryRouter for testing:
+			const testRouter = createMemoryRouter(routes, {
+				initialEntries: ['/'], // start on the home page
+			});
 
-	// 		render(<RouterProvider router={testRouter} />);
+			render(<RouterProvider router={testRouter} />);
 
-	// 		const link = screen.getByRole('link', { name: 'Products' });
-	// 		await userEvent.click(link);
+			const link = screen.getByRole('link', { name: 'Products' });
+			await userEvent.click(link);
+			await new Promise((resolve) => setTimeout(resolve, 1000));
 
-	// 		// Wait 5 seconds
-	// 		await new Promise((resolve) => setTimeout(resolve, 5000));
+			let images = screen.getAllByRole('img');
+			expect(images.length).toBeGreaterThan(12);
 
-	// 		let images = screen.getAllByRole('img');
-	// 		expect(images.length).toBeGreaterThan(12);
+			// "Add ... to cart" alt text
+			const addToCartButtonImg = screen.getByRole('button', {
+				name: /Add Sony WH-1000XM3/i,
+			});
 
-	// 		const regex = /alt={`Add [\s\S]* to cart/;
-	// 		const addToCartButtonImg = screen.getAllByRole('img', { name: regex })[0];
-	// 		await userEvent.click(addToCartButtonImg);
-	// 		console.log('This is the button: ', addToCartButtonImg);
+			await userEvent.click(addToCartButtonImg);
+			//set 1.5 second timeout
+			await new Promise((resolve) => setTimeout(resolve, 1500));
+			//get item name
+			const itemName = screen.getByText(/Sony WH-1000XM3/i).textContent;
 
-	// 		// Wait 2 seconds
-	// 		await new Promise((resolve) => setTimeout(resolve, 2000));
+			// First check: bubble = 1
+			let redBubble = screen.getByText('1');
+			expect(redBubble).toHaveTextContent('1');
 
-	// 		// Bubble = 1
-	// 		let redBubble = screen.getAllByRole('p', { name: '1' })[0];
-	// 		expect(redBubble).toHaveTextContent('1');
+			// Click again
+			await userEvent.click(addToCartButtonImg);
 
-	// 		// Click again
-	// 		await userEvent.click(addToCartButtonImg);
+			// Second check: bubble = 2
+			redBubble = screen.getByText('2');
+			expect(redBubble).toHaveTextContent('2');
 
-	// 		// Wait 2 seconds
-	// 		await new Promise((resolve) => setTimeout(resolve, 2000));
+			// Go to the cart page
+			const cartLink = screen.getByRole('link', { name: /Shopping Cart/i });
+			await userEvent.click(cartLink);
 
-	// 		// Bubble = 2
-	// 		redBubble = screen.getAllByRole('p', { name: '2' })[0];
-	// 		expect(redBubble).toHaveTextContent('2');
+			const cartItemQuantity = screen.getByText(/[\s\S]*2[\s\S]*/i);
+			expect(cartItemQuantity).toHaveTextContent('2');
 
-	// 		// Go to the cart page
-	// 		const cartLink = screen.getByRole('link', { name: 'cartLink' });
-	// 		await userEvent.click(cartLink);
+			// Decrement the quantity
+			const decrementButton = screen.getByRole('button', { name: '-' });
+			await userEvent.click(decrementButton);
+			expect(cartItemQuantity).toHaveTextContent('1');
 
-	// 		const cartItems = screen.getAllByRole('div', { name: 'cartItem' });
-	// 		const cartItemQuantity = cartItems[0].children[1].children[2];
-	// 		expect(cartItemQuantity).toHaveTextContent('2');
+			// Go back to the products page
+			const productsLink = screen.getByRole('link', { name: 'Products' });
+			await userEvent.click(productsLink);
 
-	// 		// Decrement the quantity
-	// 		const decrementButton = cartItems[0].children[1].children[2].children[1];
-	// 		await userEvent.click(decrementButton);
-	// 		expect(cartItemQuantity).toHaveTextContent('1');
+			// Wait 2 seconds
+			await new Promise((resolve) => setTimeout(resolve, 2000));
 
-	// 		// Go back to the products page
-	// 		const productsLink = screen.getByRole('link', { name: 'Products' });
-	// 		await userEvent.click(productsLink);
+			// Now the red bubble should be 1
+			//select the red bubble that is the child of the product with
+			// the name of the item
+			redBubble = screen.getByText('1');
+			expect(redBubble).toHaveTextContent('1');
+		},
+		{ timeout: 15000 },
+	);
 
-	// 		// Wait 2 seconds
-	// 		await new Promise((resolve) => setTimeout(resolve, 2000));
+	//Test: Home Page picture should change once every 7 seconds
+	it(
+		'Home Page picture should change once every 7 seconds',
+		async () => {
+			// Use a MemoryRouter for testing:
+			const testRouter = createMemoryRouter(routes, {
+				initialEntries: ['/'], // start on the home page
+			});
 
-	// 		// Now the red bubble should be 1
-	// 		redBubble = screen.getAllByRole('p', { name: '1' })[0];
-	// 		expect(redBubble).toHaveTextContent('1');
-	// 	},
-	// 	{ timeout: 15000 },
-	// );
+			render(<RouterProvider router={testRouter} />);
 
-	// //Test: Home Page picture should change once every 7 seconds
-	// it(
-	// 	'Home Page picture should change once every 7 seconds',
-	// 	async () => {
-	// 		// Use a MemoryRouter for testing:
-	// 		const testRouter = createMemoryRouter(routes, {
-	// 			initialEntries: ['/'], // start on the home page
-	// 		});
+			const images = screen.getAllByRole('img');
+			const homeImage = images.find((img) => img.alt.match('Fashionable clothing'));
+			const homeImageSrc = homeImage.src;
 
-	// 		render(<RouterProvider router={testRouter} />);
+			// Wait 7 seconds
+			await new Promise((resolve) => setTimeout(resolve, 7000));
 
-	// 		const images = screen.getAllByRole('img');
-	// 		const homeImage = images.find((img) => img.alt.match('Fashionable clothing'));
-	// 		const homeImageSrc = homeImage.src;
-
-	// 		// Wait 7 seconds
-	// 		await new Promise((resolve) => setTimeout(resolve, 7000));
-
-	// 		const newImages = screen.getAllByRole('img');
-	// 		const newHomeImage = newImages.find((img) =>
-	// 			img.alt.match('Fashionable clothing'),
-	// 		);
-	// 		const newHomeImageSrc = newHomeImage.src;
-	// 		expect(homeImageSrc).not.toBe(newHomeImageSrc);
-	// 	},
-	// 	{ timeout: 15000 },
-	// );
+			const newImages = screen.getAllByRole('img');
+			const newHomeImage = newImages.find((img) =>
+				img.alt.match('Fashionable clothing'),
+			);
+			const newHomeImageSrc = newHomeImage.src;
+			expect(homeImageSrc).not.toBe(newHomeImageSrc);
+		},
+		{ timeout: 15000 },
+	);
 
 	// // //Test: Clicking on a product on the product page should take you to the product detail page,
 	// // // where pressing the add to cart button should add the item to the cart, which should be displayed on the cart page
