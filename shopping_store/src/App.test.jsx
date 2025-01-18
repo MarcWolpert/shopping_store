@@ -252,46 +252,4 @@ describe('Home component', () => {
 		},
 		{ timeout: 15000 },
 	);
-
-	// // //Test: Clicking on a product on the product page should take you to the product detail page,
-	// // // where pressing the add to cart button should add the item to the cart, which should be displayed on the cart page
-	// it(
-	// 	'Clicking on a product on the product page should take you to the product detail page, where pressing the add to cart button should add the item to the cart',
-	// 	async () => {
-	// 		// Use a MemoryRouter for testing:
-	// 		const testRouter = createMemoryRouter(routes, {
-	// 			initialEntries: ['/'], // start on the home page
-	// 		});
-
-	// 		render(<RouterProvider router={testRouter} />);
-
-	// 		const link = screen.getByRole('link', { name: 'Products' });
-	// 		await userEvent.click(link);
-
-	// 		// Wait 5 seconds
-	// 		await new Promise((resolve) => setTimeout(resolve, 5000));
-
-	// 		let images = screen.getAllByRole('img');
-	// 		expect(images.length).toBeGreaterThan(12);
-
-	// 		const regex = /alt={`Add [\s\S]* to cart/;
-	// 		const addToCartButtonImg = screen.getAllByRole('img', { name: regex })[0];
-	// 		await userEvent.click(addToCartButtonImg);
-	// 		console.log('This is the button: ', addToCartButtonImg);
-
-	// 		// Wait 2 seconds
-	// 		await new Promise((resolve) => setTimeout(resolve, 2000));
-
-	// 		let redBubble = screen.getAllByRole('p', { name: '1' })[0];
-	// 		expect(redBubble).toHaveTextContent('1');
-
-	// 		const cartLink = screen.getByRole('link', { name: 'cartLink' });
-	// 		await userEvent.click(cartLink);
-
-	// 		const cartItems = screen.getAllByRole('div', { name: 'cartItem' });
-	// 		const cartItemQuantity = cartItems[0].children[1].children[2];
-	// 		expect(cartItemQuantity).toHaveTextContent('1');
-	// 	},
-	// 	{ timeout: 15000 },
-	// );
 });
