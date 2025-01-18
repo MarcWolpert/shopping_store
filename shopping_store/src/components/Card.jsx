@@ -65,6 +65,7 @@ const Card = ({ id, price, name, description, image, category }) => {
 					<button tabIndex={-1} className='addToCart'>
 						<img
 							tabIndex={0}
+							role={'button'}
 							src={addToCartIcon}
 							alt={`Add ${name} to cart`}
 							onClick={handleAddToCart}

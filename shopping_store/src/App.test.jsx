@@ -58,7 +58,7 @@ describe('Home component', () => {
 				expect(images.length).toBeGreaterThan(10);
 			},
 			{ timeout: 8000 },
-		); // or bigger if needed
+		);
 	});
 
 	//Test: Clicking on the product cart button should display a red bubble that is incremented by 1
@@ -74,97 +74,100 @@ describe('Home component', () => {
 
 			const link = screen.getByRole('link', { name: 'Products' });
 			await userEvent.click(link);
-
-			// Wait 2 seconds
-			await new Promise((resolve) => setTimeout(resolve, 2000));
+			await new Promise((resolve) => setTimeout(resolve, 1000));
 
 			let images = screen.getAllByRole('img');
 			expect(images.length).toBeGreaterThan(12);
 
 			// "Add ... to cart" alt text
-			const regex = /alt={`Add [\s\S]* to cart/;
-			const addToCartButtonImg = screen.getAllByRole('img', { name: regex })[0];
+			const addToCartButtonImg = screen.getByRole('button', {
+				name: /Add Sony WH-1000XM3/i,
+			});
+
 			await userEvent.click(addToCartButtonImg);
-			console.log('This is the button: ', addToCartButtonImg);
+			//set 1.5 second timeout
+			await new Promise((resolve) => setTimeout(resolve, 1500));
 
 			// First check: bubble = 1
-			let redBubble = screen.getAllByRole('p', { name: '1' })[0];
+			let redBubble = screen.getByText('1');
 			expect(redBubble).toHaveTextContent('1');
 
 			// Click again
 			await userEvent.click(addToCartButtonImg);
 
 			// Second check: bubble = 2
-			redBubble = screen.getAllByRole('p', { name: '2' })[0];
+			redBubble = screen.getByText('2');
 			expect(redBubble).toHaveTextContent('2');
 		},
 		{ timeout: 15000 },
 	);
 
-	// //Test: Clicking on the product cart button should add to cart
-	// it(
-	// 	'Clicking on the product cart button should have the same number of items in the cart as there are red bubble counts for that specific item',
-	// 	async () => {
-	// 		render(
-	// 			<MemoryRouter>
-	// 				<App />
-	// 			</MemoryRouter>,
-	// 		);
+	//Test: Clicking on the product cart button should add to cart
+	it(
+		'Clicking on the product cart button should have the same number of items in the cart as there are red bubble counts for that specific item',
+		async () => {
+			// Use a MemoryRouter for testing:
+			const testRouter = createMemoryRouter(routes, {
+				initialEntries: ['/'], // start on the home page
+			});
 
-	// 		const link = screen.getByRole('link', { name: 'Products' });
-	// 		await userEvent.click(link);
+			render(<RouterProvider router={testRouter} />);
 
-	// 		// Wait 5 seconds
-	// 		await new Promise((resolve) => setTimeout(resolve, 5000));
+			const link = screen.getByRole('link', { name: 'Products' });
+			await userEvent.click(link);
 
-	// 		let images = screen.getAllByRole('img');
-	// 		expect(images.length).toBeGreaterThan(12);
+			// Wait 5 seconds
+			await new Promise((resolve) => setTimeout(resolve, 5000));
 
-	// 		const regex = /alt={`Add [\s\S]* to cart/;
-	// 		const addToCartButtonImg = screen.getAllByRole('img', { name: regex })[0];
-	// 		await userEvent.click(addToCartButtonImg);
-	// 		console.log('This is the button: ', addToCartButtonImg);
+			let images = screen.getAllByRole('img');
+			expect(images.length).toBeGreaterThan(12);
 
-	// 		// Wait 2 seconds
-	// 		await new Promise((resolve) => setTimeout(resolve, 2000));
+			const regex = /alt={`Add [\s\S]* to cart/;
+			const addToCartButtonImg = screen.getAllByRole('img', { name: regex })[0];
+			await userEvent.click(addToCartButtonImg);
+			console.log('This is the button: ', addToCartButtonImg);
 
-	// 		// Bubble = 1
-	// 		let redBubble = screen.getAllByRole('p', { name: '1' })[0];
-	// 		expect(redBubble).toHaveTextContent('1');
+			// Wait 2 seconds
+			await new Promise((resolve) => setTimeout(resolve, 2000));
 
-	// 		// Click again
-	// 		await userEvent.click(addToCartButtonImg);
+			// Bubble = 1
+			let redBubble = screen.getAllByRole('p', { name: '1' })[0];
+			expect(redBubble).toHaveTextContent('1');
 
-	// 		// Wait 2 seconds
-	// 		await new Promise((resolve) => setTimeout(resolve, 2000));
+			// Click again
+			await userEvent.click(addToCartButtonImg);
 
-	// 		// Bubble = 2
-	// 		redBubble = screen.getAllByRole('p', { name: '2' })[0];
-	// 		expect(redBubble).toHaveTextContent('2');
+			// Wait 2 seconds
+			await new Promise((resolve) => setTimeout(resolve, 2000));
 
-	// 		// Go to the cart page
-	// 		const cartLink = screen.getByRole('link', { name: 'cartLink' });
-	// 		await userEvent.click(cartLink);
+			// Bubble = 2
+			redBubble = screen.getAllByRole('p', { name: '2' })[0];
+			expect(redBubble).toHaveTextContent('2');
 
-	// 		// structure is cartItem -> (cartItemPicture + details ->(p + p + p))
-	// 		// the p tag that is 3rd is the quantity
-	// 		const cartItems = screen.getAllByRole('div', { name: 'cartItem' });
-	// 		const cartItemQuantity = cartItems[0].children[1].children[2];
-	// 		expect(cartItemQuantity).toHaveTextContent('2');
-	// 	},
-	// 	{ timeout: 15000 },
-	// );
+			// Go to the cart page
+			const cartLink = screen.getByRole('link', { name: 'cartLink' });
+			await userEvent.click(cartLink);
+
+			// structure is cartItem -> (cartItemPicture + details ->(p + p + p))
+			// the p tag that is 3rd is the quantity
+			const cartItems = screen.getAllByRole('div', { name: 'cartItem' });
+			const cartItemQuantity = cartItems[0].children[1].children[2];
+			expect(cartItemQuantity).toHaveTextContent('2');
+		},
+		{ timeout: 15000 },
+	);
 
 	// //Test: Decrementing the counter on the cart page for a specific item
 	// //should decrement the red bubble on the product on the products page
 	// it(
 	// 	'Decrementing the counter on the cart page for a specific item should decrement the red bubble on the product on the products page',
 	// 	async () => {
-	// 		render(
-	// 			<MemoryRouter>
-	// 				<App />
-	// 			</MemoryRouter>,
-	// 		);
+	// 		// Use a MemoryRouter for testing:
+	// 		const testRouter = createMemoryRouter(routes, {
+	// 			initialEntries: ['/'], // start on the home page
+	// 		});
+
+	// 		render(<RouterProvider router={testRouter} />);
 
 	// 		const link = screen.getByRole('link', { name: 'Products' });
 	// 		await userEvent.click(link);
@@ -228,11 +231,12 @@ describe('Home component', () => {
 	// it(
 	// 	'Home Page picture should change once every 7 seconds',
 	// 	async () => {
-	// 		render(
-	// 			<MemoryRouter>
-	// 				<App />
-	// 			</MemoryRouter>,
-	// 		);
+	// 		// Use a MemoryRouter for testing:
+	// 		const testRouter = createMemoryRouter(routes, {
+	// 			initialEntries: ['/'], // start on the home page
+	// 		});
+
+	// 		render(<RouterProvider router={testRouter} />);
 
 	// 		const images = screen.getAllByRole('img');
 	// 		const homeImage = images.find((img) => img.alt.match('Fashionable clothing'));
@@ -256,11 +260,12 @@ describe('Home component', () => {
 	// it(
 	// 	'Clicking on a product on the product page should take you to the product detail page, where pressing the add to cart button should add the item to the cart',
 	// 	async () => {
-	// 		render(
-	// 			<MemoryRouter>
-	// 				<App />
-	// 			</MemoryRouter>,
-	// 		);
+	// 		// Use a MemoryRouter for testing:
+	// 		const testRouter = createMemoryRouter(routes, {
+	// 			initialEntries: ['/'], // start on the home page
+	// 		});
+
+	// 		render(<RouterProvider router={testRouter} />);
 
 	// 		const link = screen.getByRole('link', { name: 'Products' });
 	// 		await userEvent.click(link);
